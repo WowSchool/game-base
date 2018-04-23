@@ -1,0 +1,15 @@
+{
+  "name": "game-base",
+  "version": "1.0.0",
+  "description": "",
+  "main": "GameBase.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@code.vipkid.com.cn:3590/lingobus-fe/games/game-base.git"
+  },
+  "author": "",
+  "license": "ISC"
+}
