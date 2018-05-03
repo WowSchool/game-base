@@ -1,6 +1,6 @@
 {
   "name": "game-base",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "GameBase.js",
   "scripts": {
@@ -10,5 +10,10 @@
     "url": "ssh://git@code.vipkid.com.cn:3590/lingobus-fe/games/game-base.git"
   },
   "author": "wangweihua@vipkid.com.cn",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "util-env": "git+ssh://git@code.vipkid.com.cn:3590/lingobus-fe/games/library/util-env.git",
+    "util-strings": "git+ssh://git@code.vipkid.com.cn:3590/lingobus-fe/games/library/util-strings.git",
+    "util-xhr": "git+ssh://git@code.vipkid.com.cn:3590/lingobus-fe/games/library/util-xhr.git"
+  }
 }
