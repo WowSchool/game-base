@@ -6,9 +6,6 @@ const xhr = require('util-xhr');
  */
 cc.Class({
   extends: cc.Component,
-  properties: {
-      sceneScript: true
-  },
   onLoad: function () {
     this._env = env;
     this._params = strings.parseQuery(location.query);
