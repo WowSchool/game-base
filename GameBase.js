@@ -12,9 +12,18 @@ const methods = {
  */
 cc.Class({
   extends: cc.Component,
+  properties: {
+    collisionSystem: false,
+    debugCollision: false
+  },
   onLoad: function () {
     this._env = env;
     this._params = strings.parseQuery(location.query);
+
+    const collisionManager = cc.director.getCollisionManager()
+    collisionManager.enabled = this.collisionSystem;
+    collisionManager.enabledDebugDraw = this.debugCollision;
+
     this.init();
   },
   init () {
