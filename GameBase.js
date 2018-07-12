@@ -1,11 +1,9 @@
 const env = require('util-env');
 const strings = require('util-strings');
-const xhr = require('util-xhr');
-var mask = null;
+
 const methods = {
   $debug: env.debug,
   $log: env.log,
-  $xhrGet: xhr.get,
   /**
    * Instantiate a cc.Node from a Prefab
    * @param {String} dir directory name in assets/resources/<dir>
