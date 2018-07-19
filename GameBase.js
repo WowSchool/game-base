@@ -37,6 +37,28 @@ const methods = {
         }
       });
     });
+  },
+  playAudio (audioName, node = this) {
+    const url = node['audio' + strings.capitalize(audioName)];
+    if (!url) return -1;
+    return cc.audioEngine.play(url);
+  },
+  playAudioPromise (audioName, node = this) {
+    const id = this.playAudio(audioName, node);
+    if (id < 0) return Promise.reject(`${audioName} not found!`);
+    return new Promise(res => {
+      cc.audioEngine.setFinishCallback(res);
+    });
+  },
+  runActionPromise (node, ...actions) {
+    return this.runActionPromiseWithArg(node, null, ...actions);
+  },
+  runActionPromiseWithArg (node, args, ...actions) {
+    return new Promise(res => {
+      actions.push(cc.callFunc(_ => res(args)));
+      const act = cc.sequence(actions);
+      node.runAction(act);
+    });
   }
 }
 /**
@@ -62,7 +84,10 @@ cc.Class({
     const comps = this.node._components;
     for (let i in comps) {
       let comp = comps[i];
-      if (!comp || comp.sceneScript !== true) continue;
+      if (!comp || comp.sceneScript !== true) {
+        this.scriptComp = comp;
+        continue;
+      }
       // inject methods into components whose scenceScript property is true
       Object.assign(comp, methods);
     }
