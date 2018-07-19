@@ -47,7 +47,7 @@ const methods = {
     const id = this.playAudio(audioName, node);
     if (id < 0) return Promise.reject(`${audioName} not found!`);
     return new Promise(res => {
-      cc.audioEngine.setFinishCallback(res);
+      cc.audioEngine.setFinishCallback(id, res);
     });
   },
   runActionPromise (node, ...actions) {
