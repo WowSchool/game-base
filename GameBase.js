@@ -85,7 +85,6 @@ cc.Class({
     for (let i in comps) {
       let comp = comps[i];
       if (!comp || comp.sceneScript !== true) {
-        this.scriptComp = comp;
         continue;
       }
       // inject methods into components whose scenceScript property is true
