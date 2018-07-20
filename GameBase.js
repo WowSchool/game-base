@@ -135,7 +135,7 @@ cc.Class({
   },
   onLoad: function () {
     this._env = env;
-    this._query = strings.parseQuery(location.query);
+    this._query = strings.parseQuery(location.search);
 
     const collisionManager = cc.director.getCollisionManager()
     collisionManager.enabled = this.collisionSystem;
