@@ -1,5 +1,6 @@
 const env = require('util-env');
 const strings = require('util-strings');
+require('util-loaderp')
 
 const methods = {
   $debug: env.debug,
@@ -38,6 +39,10 @@ const methods = {
       });
     });
   },
+  saveAudio (audioName, audioUrl, node = this) {
+    if (!node) return;
+    node['audio' + strings.capitalize(audioName)] = audioUrl;
+  },
   playAudio (audioName, node = this) {
     const url = node['audio' + strings.capitalize(audioName)];
     if (!url) return -1;
@@ -59,6 +64,60 @@ const methods = {
       const act = cc.sequence(actions);
       node.runAction(act);
     });
+  },
+  urlOf (filename, dir = this.directory) {
+    checkHostAndDir(this);
+    return `${this.resourceHost}/${dir}/${filename}`;
+  },
+  setResourceHost (host) {
+    this.resourceHost = host;
+  },
+  setDirectory (dir) {
+    this.directory = dir;
+    return this;
+  },
+  loadConfig (filename = 'config.json') {
+    checkHostAndDir(this);
+    return cc.loaderp.load(this.urlOf(filename)).then(data => {
+      return this._config = data;
+    });
+  },
+  loadImage (filename, asSpriteFrame = true) {
+    checkHostAndDir(this);
+    const promise = cc.loaderp.load(this.urlOf(filename));
+    if (asSpriteFrame) return promise.then(createSpriteFrame);
+    return promise;
+  },
+  loadImages (filenames, asSpriteFrame = true) {
+    checkHostAndDir(this);
+    const promise = cc.loaderp.loadAll(filenames);
+    if (asSpriteFrame) return promise.then(textures => {
+      return textures.map(createSpriteFrame);
+    });
+    return promise;
+  },
+  loadAudio (filename) {
+    checkHostAndDir(this);
+    return cc.loaderp.load(this.urlOf(filename));
+  },
+  loadAudios (filenames) {
+    checkHostAndDir(this);
+    return cc.loaderp.loadAll(filenames);
+  }
+}
+
+function createSpriteFrame (tex) {
+  const frame = new cc.SpriteFrame();
+  frame.setTexture(tex)
+  return frame;
+}
+
+function checkHostAndDir (comp) {
+  if (!comp.resourceHost) {
+    throw new Error('Please set resource host property of GameBase!');
+  }
+  if (!comp.directory) {
+    throw new Error('Please set directory first!');
   }
 }
 /**
@@ -68,11 +127,15 @@ cc.Class({
   extends: cc.Component,
   properties: {
     collisionSystem: false,
-    debugCollision: false
+    debugCollision: false,
+    resourceHost: {
+      default: '',
+      tooltip: 'CDN Path without trailing slash, e.g.: https://files.host.com/games'
+    }
   },
   onLoad: function () {
     this._env = env;
-    this._params = strings.parseQuery(location.query);
+    this._query = strings.parseQuery(location.query);
 
     const collisionManager = cc.director.getCollisionManager()
     collisionManager.enabled = this.collisionSystem;
@@ -89,6 +152,9 @@ cc.Class({
       }
       // inject methods into components whose scenceScript property is true
       Object.assign(comp, methods);
+      comp.resourceHost = this.resourceHost;
+      comp.query = this._query;
+      comp.env = this._env;
     }
   }
 });
