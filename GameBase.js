@@ -71,6 +71,7 @@ const methods = {
   },
   setResourceHost (host) {
     this.resourceHost = host;
+    return this;
   },
   setDirectory (dir) {
     this.directory = dir;
